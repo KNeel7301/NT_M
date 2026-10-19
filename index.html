@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>One Way Ticket</title>
+    <title>Monthly Pass</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="color.css">
@@ -28,7 +28,7 @@
                 <path d="M15 18l-6-6 6-6"></path>
             </svg>
         </button>
-        One Way Ticket
+        Monthly Pass
     </div>
 
     <!-- Card -->
@@ -47,7 +47,7 @@
                 <div class="zone">
                     <div class="number" onclick="updateZoneText()">2</div>
                     <div class="text">ZONE RIDE</div>
-                    <div class="adult" onclick="updateAdultText()">1 Adult</div>
+                    <!-- <div class="adult" onclick="updateAdultText()">1 Adult</div> -->
                 </div>
             </div>
         </div>
@@ -139,11 +139,10 @@
             zoneElement.textContent = currentZone;
         }
 
+        /*
         const duration = 60 * 60 * 1000;
-
         localStorage.setItem('ticketStart', Date.now().toString());
         const startTime = parseInt(localStorage.getItem('ticketStart'));
-
         function updateCountdown() {
             const elapsed = Date.now() - startTime;
             const remaining = Math.max(duration - elapsed, 0);
@@ -165,6 +164,22 @@
             const progressPercent = ((duration - remaining) / duration) * 100 + 1;
             document.querySelector('.progress-bar').style.setProperty('--progress-width', `${progressPercent}%`);
         }
+        */
+
+        function updateCountdown() {
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const deadlineDate = new Date(currentDate.getFullYear(), currentMonth + 1, 1);
+            const timeRemaining = deadlineDate - currentDate;
+            const remainingDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const totalDaysInMonth = new Date(currentDate.getFullYear(), currentMonth + 1, 0).getDate();
+            const progressPercentage = (currentDate.getDate() / totalDaysInMonth) * 100;
+
+            document.getElementById('countdown').textContent =
+                `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'}`;
+            document.querySelector('.progress-bar').style.setProperty('--progress-width', `${progressPercentage}%`);
+        }
+
         function updateAdultText() {
             const adultElement = document.querySelector('.adult');
             // Extract current number from text like "1 Adult" or "3 Adults"
