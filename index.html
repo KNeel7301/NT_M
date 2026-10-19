@@ -4,12 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>Transit Pass UI Demo</title>
+    <title>One Way Ticket</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="color.css">
     <meta name="apple-mobile-web-app-status-bar-style" content="#1d86d7">
     <meta name="theme-color" content="#1d86d7" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="NJ Transit">
+    <link rel="apple-touch-icon" href="icon.png">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 </head>
 
@@ -20,7 +23,12 @@
 
     <!-- Title -->
     <div class="header">
-        Transit Pass UI Demo
+        <button class="back-button" type="button" aria-label="Go back" onclick="history.back()">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        One Way Ticket
     </div>
 
     <!-- Card -->
@@ -28,38 +36,198 @@
 
         <!-- Top content -->
         <div class="card-top">
-            <div class="demo-notice">DEMO ONLY — NOT A VALID TICKET</div>
-            <div class="qr" role="img" aria-label="Sample graphic; not a scannable code">
-                <div class="qr-placeholder">
-                    <span>SAMPLE</span>
-                    <span>NOT SCANNABLE</span>
-                </div>
-            </div>
-            <div class="tap">Illustrative placeholder only</div>
+            <button class="qr" type="button" aria-label="Enlarge QR code" aria-haspopup="dialog" onclick="openQrCode()">
+                <img class="qr-code" src="your-qr-code-image.png" id="QRCODE" alt="QR Code">
+            </button>
+            <div class="tap">Tap to enlarge</div>
             <hr class="divider">
-            <div class="interstate">SAMPLE ROUTE</div>
+            <div class="interstate" onclick="updateStateText()">INTERSTATE</div>
             <div class="details-row">
-                <div class="month">SAMPLE<br>DATE</div>
+                <div class="month" id="pass_month_year">NOV<br>2025</div>
                 <div class="zone">
-                    <div class="number">—</div>
-                    <div class="text">SAMPLE ZONE</div>
+                    <div class="number" onclick="updateZoneText()">2</div>
+                    <div class="text">ZONE RIDE</div>
+                    <div class="adult" onclick="updateAdultText()">1 Adult</div>
                 </div>
             </div>
         </div>
 
-        <div class="progress" aria-label="Illustrative sample progress">
-            <div class="progress-label">ILLUSTRATIVE SAMPLE PROGRESS</div>
+        <!-- Progress bottom -->
+        <div class="progress">
             <div class="color-strip">
                 <div class="color-block red"></div>
                 <div class="color-block green"></div>
                 <div class="color-block blue"></div>
             </div>
-            <div class="progress-bar" aria-hidden="true"></div>
-            <div class="expiry">Sample expiry display</div>
-            <div class="validator">Demo interface — no ticket or travel value</div>
+            <div class="progress-bar" id="progress-bar"></div>
+            <!-- <div class="expiry">Expires in <span id="countdown">60:00</span></div> -->
+            <div class="expiry"><span class="expires-text">Expires in </span><span id="countdown">60:00</span></div>
+            <div class="validator">View Onboard Validator Instructions</div>
         </div>
 
     </div>
+
+    <dialog class="qr-modal" id="qr-modal" aria-label="Enlarged QR code">
+        <img src="your-qr-code-image.png" alt="Enlarged QR Code">
+    </dialog>
+
+    <!-- <script>
+        function updateMonthAndYear() {
+            var currentDate = new Date();
+            var monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+            var month = monthNames[currentDate.getMonth()];
+            var year = currentDate.getFullYear();
+            document.getElementById("pass_month_year").innerHTML = month + "<br>" + year;
+        }
+
+        function updateZoneText() {
+            if (localStorage.getItem('ticketZoneLocked') === 'true') return;
+            const zoneElement = document.querySelector('.number');
+            let currentZone = parseInt(zoneElement.textContent, 10);
+            currentZone = currentZone === 9 ? 2 : currentZone + 1;
+            zoneElement.textContent = currentZone;
+        }
+
+        function updateCountdown() {
+            const countdown = document.getElementById('countdown');
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const deadlineDate = new Date(currentDate.getFullYear(), currentMonth + 1, 1);
+            const timeRemaining = deadlineDate - currentDate;
+            const remainingDays = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const totalDaysInMonth = new Date(currentDate.getFullYear(), currentMonth + 1, 0).getDate();
+            const daysPassed = currentDate.getDate();
+            const progressPercentage = (daysPassed / totalDaysInMonth) * 100;
+            countdown.textContent = remainingDays.toString();
+            document.querySelector('.progress-bar').style.setProperty('--progress-width', `${100 - progressPercentage}%`);
+        }
+
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", "#1d86d7");
+        updateMonthAndYear();
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script> -->
+
+    <script>
+        const qrModal = document.getElementById('qr-modal');
+
+        function openQrCode() {
+            qrModal.showModal();
+        }
+
+        function closeQrCode() {
+            qrModal.close();
+        }
+
+        qrModal.addEventListener('click', event => {
+            if (event.target === qrModal) closeQrCode();
+        });
+
+        function updateMonthAndYear() {
+            var currentDate = new Date();
+            var monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+            var month = monthNames[currentDate.getMonth()];
+            var year = currentDate.getFullYear();
+            document.getElementById("pass_month_year").innerHTML = month + "<br>" + year;
+        }
+
+        function updateZoneText() {
+            if (localStorage.getItem('ticketZoneLocked') === 'true') return;
+            const zoneElement = document.querySelector('.number');
+            let currentZone = parseInt(zoneElement.textContent, 10);
+            currentZone = currentZone === 9 ? 2 : currentZone + 1;
+            zoneElement.textContent = currentZone;
+        }
+
+        const duration = 60 * 60 * 1000;
+
+        localStorage.setItem('ticketStart', Date.now().toString());
+        const startTime = parseInt(localStorage.getItem('ticketStart'));
+
+        function updateCountdown() {
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(duration - elapsed, 0);
+
+            if (remaining === 0) {
+                document.getElementById('countdown').textContent = 'EXPIRED';
+                document.querySelector('.expiry').style.color = 'red';
+                document.querySelector('.progress-bar').style.setProperty('--progress-width', '0%');
+                return;
+            }
+
+            const totalMinutes = Math.floor(remaining / (1000 * 60));
+            const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+            const mm = String(totalMinutes).padStart(2, '0');
+            const ss = String(seconds).padStart(2, '0');
+
+            document.getElementById('countdown').textContent = `${mm}:${ss}`;
+
+            const progressPercent = ((duration - remaining) / duration) * 100 + 1;
+            document.querySelector('.progress-bar').style.setProperty('--progress-width', `${progressPercent}%`);
+        }
+        function updateAdultText() {
+            const adultElement = document.querySelector('.adult');
+            // Extract current number from text like "1 Adult" or "3 Adults"
+            let current = parseInt(adultElement.textContent, 10);
+            // Cycle 1 → 2 → 3 → 4 → 5 → 1
+            current = current === 5 ? 1 : current + 1;
+            // Use singular "Adult" for 1, plural "Adults" otherwise
+            adultElement.textContent = `${current} ${current === 1 ? 'Adult' : 'Adults'}`;
+        }
+        function updateStateText() {
+            const el = document.querySelector('.interstate');
+            if (localStorage.getItem('ticketStateLocked') === 'true') return;
+            const isInterstate = el.dataset.mode !== 'intra';
+            el.dataset.mode = isInterstate ? 'intra' : 'inter';
+            el.textContent = isInterstate ? 'INTRASTATE' : 'INTERSTATE';
+            el.classList.toggle('intrastate', isInterstate);
+        }
+
+        function setLockState(element, key, locked) {
+            localStorage.setItem(key, String(locked));
+            element.classList.toggle('is-locked', locked);
+            element.setAttribute('aria-pressed', String(locked));
+            element.title = locked ? 'Locked — long press to unlock' : 'Long press to lock';
+        }
+
+        function enableLongPressLock(element, key) {
+            let pressTimer;
+            let suppressNextClick = false;
+
+            setLockState(element, key, localStorage.getItem(key) === 'true');
+
+            element.addEventListener('pointerdown', () => {
+                suppressNextClick = false;
+                pressTimer = window.setTimeout(() => {
+                    const locked = localStorage.getItem(key) !== 'true';
+                    setLockState(element, key, locked);
+                    suppressNextClick = true;
+                }, 500);
+            });
+
+            const cancelPress = () => {
+                window.clearTimeout(pressTimer);
+            };
+            window.addEventListener('pointerup', cancelPress);
+            window.addEventListener('pointercancel', cancelPress);
+            element.addEventListener('pointerleave', cancelPress);
+            element.addEventListener('contextmenu', event => event.preventDefault());
+            element.addEventListener('click', event => {
+                if (!suppressNextClick) return;
+                suppressNextClick = false;
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }, true);
+        }
+
+        enableLongPressLock(document.querySelector('.number'), 'ticketZoneLocked');
+        enableLongPressLock(document.querySelector('.interstate'), 'ticketStateLocked');
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        updateMonthAndYear();
+    </script>
+
 </body>
 
 </html>
