@@ -265,7 +265,7 @@ hr.divider {
 .zone .text {
     font-weight: 600;
     font-size: 19px;
-    letter-spacing: -1px;
+    letter-spacing: 0.5px;
 }
 
 .zone .adult {
@@ -297,7 +297,7 @@ hr.divider {
     justify-content: space-between;
     width: 95%;
     gap: 0px;
-    margin-bottom: 25px;
+    margin-bottom: 16px;
     animation: blinker 2s ease-in-out infinite;
 }
 
