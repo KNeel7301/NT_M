@@ -61,33 +61,6 @@ body::after {
     z-index: 1;
 }
 
-.back-button {
-    position: absolute;
-    top: 50%;
-    left: 12px;
-    display: grid;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: white;
-    transform: translateY(-50%);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.back-button svg {
-    width: 20px;
-    height: 20px;
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 2;
-}
-
 /* White card */
 .card {
     background: #fff;
@@ -129,38 +102,39 @@ body::after {
     max-width: 225px;
     max-height: 225px;
     margin: 0 auto 0px;
-    border: 0;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
 }
 
-.qr img {
+.demo-notice {
+    align-self: stretch;
+    margin: 0 auto 10px;
+    padding: 8px 6px;
+    border: 2px solid #b42318;
+    border-radius: 6px;
+    background: #fff0ef;
+    color: #b42318;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+.qr-placeholder {
+    display: flex;
     width: 100%;
     height: 100%;
-    background: white;
-    padding: 8px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 2px dashed #b42318;
+    background: #fff;
+    color: #b42318;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
 }
 
-.qr-modal {
-    position: fixed;
-    width: min(86vw, 420px);
-    aspect-ratio: 1;
-    max-height: 86svh;
-    padding: 0;
-    overflow: visible;
-    border: 0;
-    background: transparent;
-}
-
-.qr-modal::backdrop {
-    background: rgba(0, 0, 0, 0.72);
-}
-
-.qr-modal > img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+.qr-placeholder span:first-child {
+    font-size: 24px;
 }
 
 .tap {
@@ -179,7 +153,7 @@ hr.divider {
 }
 
 .interstate {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 700;
     color: #fc353e;
     letter-spacing: 0px;
@@ -187,70 +161,41 @@ hr.divider {
     margin-top: 20px;
 }
 
-.interstate,
-.zone .number {
-    user-select: none;
-    touch-action: manipulation;
-    transition: opacity 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.interstate.is-locked {
-    color: #fc353e;
-    opacity: 1;
-    filter: none;
-    -webkit-text-fill-color: #fc353e;
-}
-
-.interstate.intrastate.is-locked {
-    color: #000;
-    -webkit-text-fill-color: #000;
-}
-
-.zone .number.is-locked {
-    color: #000;
-    opacity: 1;
-    filter: none;
-    -webkit-text-fill-color: #000;
-}
-
-.interstate.intrastate {
-    color: #000;
-}
-
 /* Month box + Zone number row */
 .details-row {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: relative;
     width: 100%;
+    gap: 10px;
     margin: 0 0 6px;
 }
 
 .month {
-    background: var(--first, #4caf50);
-    color: #ffffff;
-    font-weight: 600;
+    background: #fff0ef;
+    color: #b42318;
+    font-weight: 700;
     border-radius: 6px;
     text-align: center;
-    font-size: 16px;
-    letter-spacing: 0.5px;
-    width: 52px;
-    height: 52px;
-    border: 3px solid #000;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+    width: auto;
+    height: auto;
+    border: 1px dashed #b42318;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    line-height: 1.1;
-    position: absolute;
-    left: 0;
-    padding: 2px;
-    transform: translateY(-20px);
+    line-height: 1.25;
+    position: static;
+    flex: 0 0 auto;
+    padding: 6px 8px;
 }
 
 .zone {
+    flex: 1;
+    min-width: 0;
     text-align: center;
 }
 
@@ -259,18 +204,12 @@ hr.divider {
     font-weight: 700;
     line-height: 1;
     margin-bottom: 6px;
-
 }
 
 .zone .text {
     font-weight: 600;
-    font-size: 19px;
+    font-size: clamp(14px, 4vw, 19px);
     letter-spacing: -1px;
-}
-
-.zone .adult {
-    font-weight: 200;
-    font-size: 14px;
 }
 
 /* Progress pinned to bottom */
@@ -283,14 +222,13 @@ hr.divider {
     padding-top: 8px;
 }
 
-/* .color-strip {
-    display: flex;
-    justify-content: space-between;
-    width: 95%;
-    gap: 0px;
-    margin-bottom: 16px;
-    animation: blinker 1s linear infinite;
-} */
+.progress-label {
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
 
 .color-strip {
     display: flex;
@@ -298,39 +236,6 @@ hr.divider {
     width: 95%;
     gap: 0px;
     margin-bottom: 25px;
-    animation: blinker 2s ease-in-out infinite;
-}
-
-/* @keyframes blinker {
-    0% {
-        opacity: 0;
-    }
-
-    49% {
-        opacity: 0;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 1;
-    }
-} */
-
-@keyframes blinker {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
 }
 
 .color-block {
@@ -367,82 +272,19 @@ hr.divider {
     left: 0;
     top: 0;
     height: 100%;
-    width: var(--progress-width, 100%);
+    width: 50%;
     background: #007aff;
     border-radius: 4px;
 }
 
 .expiry {
-    font-size: 18px;
-    font-weight: 800;
-    /* margin-bottom: 1px; */
-}
-
-.expires-text {
     font-size: 16px;
-    font-weight: 600;
-}
-
-#countdown {
-    font-size: 18px;
     font-weight: 700;
 }
 
 .validator {
     color: #000000;
     font-size: 10px;
-    font-weight: 300;
-    text-decoration: underline;
+    font-weight: 400;
     margin-bottom: 2px;
-}
-
-/* Login overlay */
-#login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: #000000bb;
-    color: white;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
-
-#login-container input {
-    padding: 10px;
-    width: 250px;
-    font-size: 16px;
-    margin-bottom: 15px;
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-}
-
-#login-container button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background: #ff6600;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-#login-container button:hover {
-    background: #e65c00;
-}
-
-#login-message {
-    margin-top: 10px;
-    font-size: 14px;
-    color: red;
-}
-
-#qr-clicked {
-    display: none;
 }
