@@ -50,10 +50,10 @@ body::after {
 /* Monthly Pass title */
 .header {
     position: fixed;
-    top: env(safe-area-inset-top);
+    top: max(env(safe-area-inset-top), 3px);
     left: 0;
     width: 100%;
-    padding: 8px 0 10px;
+    padding: 12px 0 10px;
     color: white;
     font-size: 17px;
     font-weight: 600;
@@ -178,14 +178,15 @@ hr.divider {
     margin: 4px auto 10px;
 }
 
-/* .interstate {
+.interstate {
     font-size: 36px;
     font-weight: 800;
     color: #fc353e;
     letter-spacing: 0.5px;
     margin-bottom: 0px;
     margin-top: -2px;
-} */
+}
+/*
 .interstate {
     font-size: 30px;
     font-weight: 700;
@@ -194,6 +195,7 @@ hr.divider {
     margin-bottom: 5px;
     margin-top: 20px;
 }
+*/
 
 .interstate,
 .zone .number {
@@ -236,7 +238,7 @@ hr.divider {
     margin: 0 0 6px;
 }
 
-/* .month {
+.month {
     background: var(--first, #4caf50);
     color: #ffffff;
     font-weight: 600;
@@ -255,11 +257,12 @@ hr.divider {
     position: absolute;
     left: 10px;
     padding: 2px;
-} */
-
+}
+/*
 .month {
     display: none;
 }
+*/
 
 .zone {
     text-align: center;
