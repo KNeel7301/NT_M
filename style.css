@@ -50,7 +50,7 @@ body::after {
 /* Monthly Pass title */
 .header {
     position: fixed;
-    top: calc(env(safe-area-inset-top) + 15px);
+    top: calc(env(safe-area-inset-top) + 11px);
     left: 0;
     width: 100%;
     padding: 12px 0 10px;
