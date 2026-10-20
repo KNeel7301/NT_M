@@ -225,7 +225,7 @@ body::after {
 
 .qr-view .qr-view-interstate {
     margin: 0 0 2px;
-    font-size: 18px;
+    font-size: 26px;
     font-weight: 700;
     line-height: 1.1;
 }
@@ -257,14 +257,14 @@ body::after {
 }
 
 .qr-view .qr-view-number {
-    font-size: 22px;
+    font-size: 28px;
     font-weight: 650;
     line-height: 1;
 }
 
 .qr-view-zone-text {
     margin-top: 3px;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: 0.25px;
 }
@@ -320,15 +320,17 @@ body::after {
     font-weight: 600;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    outline: none;
+    box-shadow: none;
 }
 
-.qr-view-back:focus:not(:focus-visible) {
+.qr-view-back:focus {
     outline: none;
+    box-shadow: none;
 }
 
 .qr-view-back:focus-visible {
-    outline: 2px solid #064d78;
-    outline-offset: 2px;
+    filter: brightness(1.12);
 }
 
 .qr-view-back svg {
