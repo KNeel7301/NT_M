@@ -67,8 +67,38 @@
 
     </div>
 
-    <dialog class="qr-modal" id="qr-modal" aria-label="Enlarged QR code">
-        <img src="your-qr-code-image.png" alt="Enlarged QR Code">
+    <dialog class="qr-modal" id="qr-modal" aria-label="Enlarged ticket view">
+        <div class="qr-view">
+            <div class="qr-view-title">Monthly Pass</div>
+            <div class="qr-view-code">
+                <img src="your-qr-code-image.png" alt="QR Code">
+            </div>
+            <hr class="qr-view-divider">
+            <div class="qr-view-interstate interstate">INTERSTATE</div>
+            <div class="qr-view-details">
+                <div class="qr-view-month month"></div>
+                <div class="qr-view-zone">
+                    <div class="qr-view-number number">2</div>
+                    <div class="qr-view-zone-text">ZONE RIDE</div>
+                </div>
+            </div>
+            <div class="qr-view-progress">
+                <div class="color-strip">
+                    <div class="color-block red"></div>
+                    <div class="color-block green"></div>
+                    <div class="color-block blue"></div>
+                </div>
+                <div class="qr-view-progress-bar progress-bar"></div>
+                <div class="qr-view-expiry">Expires in <span class="qr-view-countdown">12 days</span></div>
+            </div>
+            <button class="qr-view-back" type="button" onclick="closeQrCode()">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+                Back to ticket
+            </button>
+            <span class="qr-view-home-indicator" aria-hidden="true"></span>
+        </div>
     </dialog>
 
     <!-- <script>
@@ -112,11 +142,49 @@
         const qrModal = document.getElementById('qr-modal');
 
         function openQrCode() {
+            syncQrView();
             qrModal.showModal();
+            requestAnimationFrame(() => qrModal.classList.add('is-open'));
         }
 
         function closeQrCode() {
+            qrModal.classList.remove('is-open');
             qrModal.close();
+        }
+
+        qrModal.addEventListener('close', () => qrModal.classList.remove('is-open'));
+        qrModal.addEventListener('cancel', event => {
+            event.preventDefault();
+            closeQrCode();
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && qrModal.open) {
+                event.preventDefault();
+                closeQrCode();
+            }
+        });
+
+        function syncQrView() {
+            const month = document.querySelector('.month');
+            const interstate = document.querySelector('.interstate');
+            const zoneNumber = document.querySelector('.zone .number');
+            const countdown = document.getElementById('countdown');
+            const progressBar = document.querySelector('.progress-bar');
+            const qrMonth = document.querySelector('.qr-view-month');
+            const qrInterstate = document.querySelector('.qr-view-interstate');
+            const qrZoneNumber = document.querySelector('.qr-view-number');
+
+            qrMonth.innerHTML = month.innerHTML;
+            qrInterstate.textContent = interstate.textContent;
+            qrInterstate.classList.toggle('intrastate', interstate.classList.contains('intrastate'));
+            qrInterstate.classList.toggle('is-locked', interstate.classList.contains('is-locked'));
+            qrZoneNumber.textContent = zoneNumber.textContent;
+            qrZoneNumber.classList.toggle('is-locked', zoneNumber.classList.contains('is-locked'));
+            document.querySelector('.qr-view-countdown').textContent = countdown.textContent;
+            document.querySelector('.qr-view-progress-bar').style.setProperty(
+                '--progress-width',
+                progressBar.style.getPropertyValue('--progress-width')
+            );
         }
 
         qrModal.addEventListener('click', event => {
@@ -129,6 +197,7 @@
             var month = monthNames[currentDate.getMonth()];
             var year = currentDate.getFullYear();
             document.getElementById("pass_month_year").innerHTML = month + "<br>" + year;
+            syncQrView();
         }
 
         function updateZoneText() {
@@ -137,6 +206,7 @@
             let currentZone = parseInt(zoneElement.textContent, 10);
             currentZone = currentZone === 9 ? 2 : currentZone + 1;
             zoneElement.textContent = currentZone;
+            syncQrView();
         }
 
         /*
@@ -178,6 +248,7 @@
             document.getElementById('countdown').textContent =
                 `${remainingDays} ${remainingDays === 1 ? 'day' : 'days'}`;
             document.querySelector('.progress-bar').style.setProperty('--progress-width', `${progressPercentage}%`);
+            syncQrView();
         }
 
         function updateAdultText() {
@@ -196,6 +267,7 @@
             el.dataset.mode = isInterstate ? 'intra' : 'inter';
             el.textContent = isInterstate ? 'INTRASTATE' : 'INTERSTATE';
             el.classList.toggle('intrastate', isInterstate);
+            syncQrView();
         }
 
         function setLockState(element, key, locked) {
@@ -203,6 +275,7 @@
             element.classList.toggle('is-locked', locked);
             element.setAttribute('aria-pressed', String(locked));
             element.title = locked ? 'Locked — long press to unlock' : 'Long press to lock';
+            syncQrView();
         }
 
         function enableLongPressLock(element, key) {
